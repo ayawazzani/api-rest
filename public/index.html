@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Calculatrice FullStack</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.card {
+    background: #ffffff;
+    width: 350px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 5px rgba(78,115,223,0.5);
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:first-of-type {
+    background-color: #4e73df;
+    color: white;
+}
+
+button:first-of-type:hover {
+    background-color: #2e59d9;
+}
+
+button:last-of-type {
+    background-color: #1cc88a;
+    color: white;
+}
+
+button:last-of-type:hover {
+    background-color: #17a673;
+}
+
+#result {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #4e73df;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>Calculatrice FullStack</h2>
+<input type="number" id="n1" placeholder="Nombre 1">
+<input type="number" id="n2" placeholder="Nombre 2"><br>
+<button onclick="calculer('somme')">Calculer la Somme</button>
+<button onclick="calculer('produit')">Calculer le Produit</button>
+<p id="result"></p>
+</div>
+
+<script>
+async function calculer(type) {
+    const n1 = document.getElementById('n1').value;
+    const n2 = document.getElementById('n2').value;
+
+    if (!n1 || !n2) {
+        document.getElementById('result').innerText = "Veuillez remplir les deux nombres";
+        return;
+    }
+
+    const response = await fetch(`/api/v1/calculs/${type}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ n1, n2 })
+    });
+
+    const data = await response.json();
+    document.getElementById('result').innerText = data.result || data.message;
+}
+</script>
+
+</body>
+</html>
